@@ -1,0 +1,12 @@
+Preporučeni proces prodaje vozne karte
+
+• nakon odabira polazne i dolazne stanice (getStanice) , datuma putovanja te broja putnika preuzeti
+dostupne linije (getPolazak)
+• nakon odabira linije (getPolazak) rezervirati sjedala za putnike (quickRezervacijaBus)
+• kod povratne karte sa definiranim datumom povratka preuzeti linije sa inverznim stanicama i
+datumom povratka (getPolazak) i na prethodno opisan način rezervirati sjedala
+• odabrati tip karte za svaku rezervaciju (getLinijaCjenik)
+• unutar 20 minuta popuniti podatke o voznoj karti i upisati je u bazu; jedan (addVoznaKartaBulk), te
+kod povratne karte sa definiranim datumom povratka upisati i povratak
+(addVoznaKartaZatvoreniPovratakBulk)
+• Preuzeti podatke vozne karte (getVoznaKartaPrint) i obavezno ispisati QR Code radi validacije u vozilu.
