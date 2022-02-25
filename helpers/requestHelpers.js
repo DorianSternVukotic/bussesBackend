@@ -1,8 +1,8 @@
 prepareRequestBody= (req) => {
     return {...req.body,
         ...{
-            'username': 'aksplit',
-            'password': 'aksplit'
+            'username': 'pminternet',
+            'password': 'pmprodaja'
         }
     }
 }

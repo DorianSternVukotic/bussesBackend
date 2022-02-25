@@ -1,8 +1,10 @@
 const axios = require('axios').default;
+const qiqoBaseAPI = 'https://demoticket.ak-split.hr:9294/DesktopModules/btServices/API/bt'
+//const qiqoBaseAPI = 'http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt'
 
 getQiqoActiveDepartures = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/PolasciAktivniGet', req)
+        axios.post(`${qiqoBaseAPI}/PolasciAktivniGet`, req)
             .then(function (response) {
                 resolve(response)
             })
@@ -15,7 +17,7 @@ getQiqoActiveDepartures = (req) => {
 }
 getQiqoDepartures = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/PolasciGet', req)
+        axios.post(`${qiqoBaseAPI}/PolasciGet`, req)
             .then(function (response) {
                 resolve(response)
             })
@@ -28,7 +30,7 @@ getQiqoDepartures = (req) => {
 }
 getQiqoLinePriceList = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/LinijaCjenikGet', req)
+        axios.post(`${qiqoBaseAPI}/LinijaCjenikGet`, req)
             .then(function (response) {
                 resolve(response)
             })
@@ -41,7 +43,7 @@ getQiqoLinePriceList = (req) => {
 }
 getQiqoLineRelationPriceList = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/LinijaCjenikRelacijaGet', req)
+        axios.post(`${qiqoBaseAPI}/LinijaCjenikRelacijaGet`, req)
             .then(function (response) {
                 resolve(response)
             })
@@ -55,7 +57,7 @@ getQiqoLineRelationPriceList = (req) => {
 
 getQiqoAllStationsList = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/VozniRedStanice', req)
+        axios.post(`${qiqoBaseAPI}/VozniRedStanice`, req)
             .then(function (response) {
                 resolve(response)
             })
@@ -69,7 +71,7 @@ getQiqoAllStationsList = (req) => {
 
 getQiqoTimeTables = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/VozniRed', req)
+        axios.post(`${qiqoBaseAPI}/VozniRed`, req)
             .then(function (response) {
                 resolve(response)
             })
@@ -83,7 +85,7 @@ getQiqoTimeTables = (req) => {
 
 getQiqoReservations = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post('http://testshop.qiqo.hr:9094/DesktopModules/btServices/API/bt/RezervacijeGet', req)
+        axios.post(`${qiqoBaseAPI}/RezervacijeGet`, req)
             .then(function (response) {
                 resolve(response)
             })

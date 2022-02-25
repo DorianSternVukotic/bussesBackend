@@ -57,6 +57,7 @@ router.post('/timeTables', function(req, res, next) {
 
 router.post('/reservations', function(req, res, next) {
     api.getReservations(req).then((r) => {
+        console.log(r.data)
         res.send(r.data)
     }).catch((e) => {
         res.send(e)
