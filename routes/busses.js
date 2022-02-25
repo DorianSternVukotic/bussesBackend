@@ -15,8 +15,16 @@ router.post('/activeDepartures', function(req, res, next) {
     })
 });
 
-router.post('/departures', function(req, res, next) {
+router.post('/activeDepartures', function(req, res, next) {
     api.getActiveDepartures(req).then((r) => {
+        res.send(r.data)
+    }).catch((e) => {
+        res.send(e)
+    })
+});
+
+router.post('/departures', function(req, res, next) {
+    api.getDepartures(req).then((r) => {
         res.send(r.data)
     }).catch((e) => {
         res.send(e)
