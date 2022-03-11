@@ -1,5 +1,6 @@
 var express = require('express');
 var api = require("../api/api");
+var filterHelpers = require("../helpers/filterHelpers")
 var router = express.Router();
 
 /* GET users listing. */
@@ -25,7 +26,8 @@ router.post('/activeDepartures', function(req, res, next) {
 
 router.post('/departures', function(req, res, next) {
     api.getDepartures(req).then((r) => {
-        res.send(r.data)
+        let kosherDepartures = filterHelpers.filterDepartureResults(r.data)
+        res.send(kosherDepartures)
     }).catch((e) => {
         res.send(e)
     })
