@@ -1,5 +1,6 @@
 var qiqoAPI =require("./qiqoBusTicket/qiqoApi");
 var requestHelpers =require("../helpers/requestHelpers");
+const {filterLineRelationPriceListByRelations} = require("../helpers/filterHelpers");
 
 getActiveDepartures = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
@@ -35,6 +36,28 @@ getLineRelationPriceList= (req) => {
     })
     return returnPromise
 }
+
+getLineRelationPriceListFilteredForStations= (req) => {
+    var reqBody = requestHelpers.prepareRequestBody(req)
+    var returnPromise = new Promise((resolve, reject) => {
+        qiqoAPI.getQiqoLinePriceList(reqBody).then((result) => {
+            var filteredResults = filterLineRelationPriceListByRelations(result.data, reqBody.stanicaod, reqBody.stanicado)
+            resolve(filteredResults)
+        }).catch(e => reject(e))
+    })
+    return returnPromise
+}
+
+getLineRelationPriceListFilteredForStationsAndPrivileges= (reqBody) => {
+    var returnPromise = new Promise((resolve, reject) => {
+        qiqoAPI.getQiqoLinePriceList(reqBody).then((result) => {
+            var filteredResults = filterLineRelationPriceListByRelations(result.data, reqBody.stanicaod, reqBody.stanicado)
+            resolve(filteredResults)
+        }).catch(e => reject(e))
+    })
+    return returnPromise
+}
+
 getAllStationsList= (req) => {
     var returnPromise = new Promise((resolve, reject) => {
         qiqoAPI.getQiqoAllStationsList(requestHelpers.prepareRequestBody(req)).then((result) => {
@@ -55,8 +78,8 @@ getTimeTables= (req) => {
 
 getReservations= (req) => {
     var reqBody = requestHelpers.prepareRequestBody(req)
+    reqBody.reservations=JSON.parse(reqBody.reservations)
     reqBody = requestHelpers.prepareReservationData(reqBody)
-    //console.log(reqBody)
     var returnPromise = new Promise((resolve, reject) => {
         qiqoAPI.getQiqoReservations(reqBody).then((result) => {
             resolve(result)
@@ -73,3 +96,5 @@ exports.getLineRelationPriceList = getLineRelationPriceList
 exports.getAllStationsList = getAllStationsList
 exports.getTimeTables = getTimeTables
 exports.getReservations = getReservations
+exports.getLineRelationPriceListFilteredForStations = getLineRelationPriceListFilteredForStations
+exports.getLineRelationPriceListFilteredForStationsAndPrivileges = getLineRelationPriceListFilteredForStationsAndPrivileges

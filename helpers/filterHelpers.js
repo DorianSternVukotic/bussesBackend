@@ -9,4 +9,12 @@ filterDepartureResults = (results) => {
   return filteredResults
 }
 
+filterLineRelationPriceListByRelations = (results, from, to) => {
+  let filteredResults;
+  filteredResults = results.filter(result => {
+    return (parseInt(result.stanicaod) === parseInt(from) && parseInt(result.stanicado) === parseInt(to))
+  })
+  return filteredResults
+}
 exports.filterDepartureResults = filterDepartureResults
+exports.filterLineRelationPriceListByRelations = filterLineRelationPriceListByRelations

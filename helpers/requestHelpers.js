@@ -7,15 +7,23 @@ prepareRequestBody= (req) => {
     }
 }
 
+addToRequestBody= (req, additionalData) => {
+    return {...req.body,
+        ...{
+            'username': 'pminternet',
+            'password': 'pmprodaja'
+        },
+          ...additionalData
+    }
+}
+
 prepareReservationData = (reqBody) => {
-    var reservationsAllWays = JSON.parse(reqBody.reservations)
+    var reservationsAllWays = reqBody.reservations
     var allReservations = []
     reservationsAllWays.forEach(reservationsWay => {
-        reservationsWay.forEach(reservation => {
-            allReservations.push(reservation)
-        })
+        reservationsWay = JSON.parse(reservationsWay)
+        allReservations.push(reservationsWay)
     })
-
     var preparedReservations = allReservations.map(reservation => {
         return {
             linija: reservation.line,
@@ -36,3 +44,4 @@ prepareReservationData = (reqBody) => {
 
 exports.prepareRequestBody = prepareRequestBody
 exports.prepareReservationData = prepareReservationData
+exports.addToRequestBody = addToRequestBody
