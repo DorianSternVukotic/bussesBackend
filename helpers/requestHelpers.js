@@ -1,8 +1,9 @@
 prepareRequestBody= (req) => {
     return {...{
-        'username': 'pminternet',
-        'password': 'pmprodaja'
-    },...req.body}
+            'username': 'pminternet',
+            'password': 'pmprodaja'
+        },...req.body
+    }
 }
 
 addToRequestBody= (req, additionalData) => {
