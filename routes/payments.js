@@ -12,9 +12,13 @@ router.post('/transactionResponse', function(req, res) {
     orderNumber = req.body.order_number
     customParameters = req.body.custom_params
 
-    if (responseCode == "0000" && responseMessage == "approved" ) {
+    if (transactionResponseCode == "0000" && transactionResponseMessage == "approved" ) {
         api.getBusCards(req, customParameters).then((r) => {
             //TODO: Create Buscard order and bus cards model as well as controllers.
+            console.log('req')
+            console.log(req)
+            console.log('r.data:')
+            console.log(r.data)
             res.send(r.data)
         }).catch((e) => {
             res.send(e)
