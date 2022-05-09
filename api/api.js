@@ -12,8 +12,12 @@ getActiveDepartures = (req) => {
 }
 
 getDepartures = (req) => {
+    // console.log('req-api-departures')
+    // console.log(req)
     var returnPromise = new Promise((resolve, reject) => {
         qiqoAPI.getQiqoDepartures(requestHelpers.prepareRequestBody(req)).then((result) => {
+            // console.log('departuresResults')
+            // console.log(result)
             resolve(result)
         }).catch(e => reject(e))
     })
@@ -21,6 +25,8 @@ getDepartures = (req) => {
 }
 
 getLinePriceList= (req) => {
+    // console.log('req-api-line')
+    // console.log(req)
     var returnPromise = new Promise((resolve, reject) => {
         qiqoAPI.getQiqoLinePriceList(requestHelpers.prepareRequestBody(req)).then((result) => {
             resolve(result)
@@ -29,8 +35,17 @@ getLinePriceList= (req) => {
     return returnPromise
 }
 getLineRelationPriceList= (req) => {
+    // console.log('req-relation api-line')
+    // console.log(req)
+    let requestBody = requestHelpers.prepareRequestBody(req)
+    // console.log('prepared-req-relation api-line')
+    // console.log(requestBody)
     var returnPromise = new Promise((resolve, reject) => {
-        qiqoAPI.getQiqoLinePriceList(requestHelpers.prepareRequestBody(req)).then((result) => {
+        qiqoAPI.getQiqoLinePriceList(requestBody).then((result) => {
+            var filteredResults = filterLineRelationPriceListByRelations(result.data, requestBody.stanicaod, requestBody.stanicado)
+            // console.log('filteredResults')
+            // console.log(filteredResults)
+            result.data = filteredResults
             resolve(result)
         }).catch(e => reject(e))
     })
