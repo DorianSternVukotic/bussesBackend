@@ -6,17 +6,17 @@ const {addToRequestBody} = require("../helpers/requestHelpers");
 var router = express.Router();
 
 router.post('/transactionResponse', function(req, res) {
-    dataBody = req.body
-    transactionResponseCode = req.body.responseCode
-    transactionResponseMessage = req.body.responseMessage
-    orderNumber = req.body.order_number
-    customParameters = req.body.custom_params
-
-    if (transactionResponseCode == "0000" && transactionResponseMessage == "approved" ) {
+    dataBody = JSON.parse(req.body.transaction_response)
+    transactionResponseCode = dataBody.responseCode
+    transactionResponseMessage =dataBody.responseMessage
+    orderNumber = dataBody.order_number
+    customParameters = dataBody.custom_params
+    
+    if (transactionResponseCode == "0000" && transactionResponseMessage == "transaction approved" ) {
         api.getBusCards(req, customParameters).then((r) => {
             //TODO: Create Buscard order and bus cards model as well as controllers.
-            console.log('req')
-            console.log(req)
+            console.log('customParameters')
+            console.log(customParameters)
             console.log('r.data:')
             console.log(r.data)
             res.send(r.data)
