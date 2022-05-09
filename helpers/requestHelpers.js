@@ -1,7 +1,7 @@
 prepareRequestBody= (req) => {
     return {...{
             'username': 'pminternet',
-            'password': 'pmprodaja'
+            'password': 'pmprodaja',
         },...req.body
     }
 }
@@ -10,9 +10,19 @@ addToRequestBody= (req, additionalData) => {
     return {...req.body,
         ...{
             'username': 'pminternet',
-            'password': 'pmprodaja'
+            'password': 'pmprodaja',
         },
           ...additionalData
+    }
+}
+
+prepareBusCardsDataRequest = (req, customParameters) => {
+    reservationData = customParameters.reservations
+    return {
+        'username': 'pminternet',
+        'password': 'pmprodaja',
+        'rezervacije': reservationData,
+      //,...req.body
     }
 }
 
@@ -41,6 +51,7 @@ prepareReservationData = (reqBody) => {
 
 }
 
+exports.prepareBusCardsDataRequest = prepareBusCardsDataRequest
 exports.prepareRequestBody = prepareRequestBody
 exports.prepareReservationData = prepareReservationData
 exports.addToRequestBody = addToRequestBody

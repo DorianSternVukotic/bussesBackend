@@ -1,23 +1,26 @@
 var express = require('express');
+const { body,validationResult } = require('express-validator');
 var api = require("../api/api");
 var filterHelpers = require("../helpers/filterHelpers")
 const {addToRequestBody} = require("../helpers/requestHelpers");
-const {getLineRelationPriceListFilteredForStationsAndPrivileges} = require("../api/api");
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    //Should this have a response?
-    res.send('respond with a resource');
-});
+router.post('/transactionResponse', function(req, res) {
+    dataBody = req.body
+    transactionResponseCode = req.body.responseCode
+    transactionResponseMessage = req.body.responseMessage
+    orderNumber = req.body.order_number
+    customParameters = req.body.custom_params
 
-router.post('/transactionResponse', function(req, res, next) {
-    //Some code to handle the transactionresponse, the code below is just some copy-pasta
-    api.getTransactionResponse(req).then((r) => {
-        res.send(r.data)
-    }).catch((e) => {
-        res.send(e)
-    })
+    if (responseCode == "0000" && responseMessage == "approved" ) {
+        api.getBusCards(req, customParameters).then((r) => {
+            //TODO: Create Buscard order and bus cards model as well as controllers.
+            res.send(r.data)
+        }).catch((e) => {
+            res.send(e)
+        })
+    }
+
 });
 
 module.exports = router;

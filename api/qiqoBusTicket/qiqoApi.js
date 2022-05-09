@@ -103,6 +103,21 @@ getQiqoReservations = (req) => {
     return returnPromise
 }
 
+getQiqoBusCards = (req) =>{
+    var returnPromise = new Promise((resolve, reject) => {
+        axios.post(`${qiqoBaseAPI}/VozneKarteGet`, req)
+            .then(function (response) {
+                resolve(response)
+            })
+            .catch(function (error) {
+                reject(error)
+                console.log(error);
+            });
+    })
+    return returnPromise
+}
+
+exports.getQiqoBusCards = getQiqoBusCards
 exports.getQiqoActiveDepartures = getQiqoActiveDepartures
 exports.getQiqoDepartures = getQiqoDepartures
 exports.getQiqoLinePriceList = getQiqoLinePriceList
