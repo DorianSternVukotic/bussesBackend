@@ -43,11 +43,11 @@ getLineRelationPriceList= (req) => {
     // console.log('prepared-req-relation api-line')
     // console.log(requestBody)
     var returnPromise = new Promise((resolve, reject) => {
-        qiqoAPI.getQiqoLinePriceList(requestBody).then((result) => {
-            var filteredResults = filterLineRelationPriceListByRelations(result.data, requestBody.stanicaod, requestBody.stanicado)
-            // console.log('filteredResults')
-            // console.log(filteredResults)
-            result.data = filteredResults
+        qiqoAPI.getQiqoLineRelationPriceList(requestBody).then((result) => {
+        //     var filteredResults = filterLineRelationPriceListByRelations(result.data, requestBody.stanicaod, requestBody.stanicado)
+        //     // console.log('filteredResults')
+        //     // console.log(filteredResults)
+        //     result.data = filteredResults
             resolve(result)
         }).catch(e => reject(e))
     })

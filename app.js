@@ -5,6 +5,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
 
+var fs = require('fs');
+//setup local storage place for 
+// var LocalStorage = require('node-localstorage').LocalStorage,
+// localStorage = new LocalStorage('./scratch');
+// localStorage.setItem('order_number', 0) 
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var bussesRouter = require('./routes/busses');
