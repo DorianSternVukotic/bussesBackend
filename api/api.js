@@ -2,6 +2,13 @@ var qiqoAPI =require("./qiqoBusTicket/qiqoApi");
 var requestHelpers =require("../helpers/requestHelpers");
 const {filterLineRelationPriceListByRelations} = require("../helpers/filterHelpers");
 
+getTransactionResponse = (req) =>{
+    var returnPromise = new Promise((resolve, reject) => {
+        //Code to handle the transactionResponseData
+    })
+    return returnPromise
+}
+
 getActiveDepartures = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
         qiqoAPI.getQiqoActiveDepartures(requestHelpers.prepareRequestBody(req)).then((result) => {
@@ -34,6 +41,7 @@ getLinePriceList= (req) => {
     })
     return returnPromise
 }
+
 getLineRelationPriceList= (req) => {
     // console.log('req-relation api-line')
     // console.log(req)
