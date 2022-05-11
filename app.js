@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
 
-var fs = require('fs');
+// var fs = require('fs');
 //setup local storage place for 
 // var LocalStorage = require('node-localstorage').LocalStorage,
 // localStorage = new LocalStorage('./scratch');

@@ -46,8 +46,8 @@ getQiqoLinePriceList = (req) => {
     return returnPromise
 }
 getQiqoLineRelationPriceList = (req) => {
-    console.log('req-relation-line')
-    console.log(req)
+    // console.log('req-relation-line')
+    // console.log(req)
     var returnPromise = new Promise((resolve, reject) => {
         axios.post(`${qiqoBaseAPI}/LinijaCjenikRelacijaGet`, req)
             .then(function (response) {
