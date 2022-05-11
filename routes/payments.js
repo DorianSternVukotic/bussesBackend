@@ -11,10 +11,11 @@ router.post('/transactionResponse', function(req, res) {
     transactionResponseMessage =dataBody.responseMessage
     orderNumber = dataBody.order_number
     customParameters = dataBody.custom_params
+    console.log('Placanje uspjesno')
+    console.log('customParameters: ', customParameters)
     
     if (transactionResponseCode == "0000" && transactionResponseMessage == "transaction approved" ) {
         api.getBusCards(req, customParameters).then((r) => {
-            //TODO: Create Buscard order and bus cards model as well as controllers.
             console.log('customParameters')
             console.log(customParameters)
             console.log('r.data:')
