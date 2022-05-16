@@ -111,6 +111,8 @@ router.post('/linePriceList', function(req, res, next) {
 
 router.post('/lineRelationPriceList', function(req, res, next) {
     api.getLineRelationPriceList(req).then((r) => {
+        // console.log('r.data')
+        // console.log(r.data)
         res.send(r.data)
     }).catch((e) => {
         res.send(e)
@@ -142,8 +144,7 @@ router.post('/timeTables', function(req, res, next) {
 });
 
 router.post('/reservations', function(req, res, next) {
-    // let rawdata = fs.readFileSync(path.resolve(__dirname, '../persistent.json'));
-    // let fileData = JSON.parse(rawdata);
+    // console.log(req.body)
     api.getReservations(req).then((r) => {
         // console.log(r.data)
         // fileData.order_number += 1

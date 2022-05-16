@@ -91,7 +91,9 @@ getQiqoTimeTables = (req) => {
 
 getQiqoReservations = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post(`${qiqoBaseAPI}/RezervacijeGet`, req)
+        // console.log('unutarsvega')
+        // console.log(req.body)
+        axios.post(`${qiqoBaseAPI}/RezervacijeGet`, req.body)
             .then(function (response) {
                 resolve(response)
             })

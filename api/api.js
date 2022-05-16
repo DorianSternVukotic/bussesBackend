@@ -94,11 +94,23 @@ getTimeTables= (req) => {
 }
 
 getReservations= (req) => {
-    var reqBody = requestHelpers.prepareRequestBody(req)
-    reqBody.reservations=JSON.parse(reqBody.reservations)
-    reqBody = requestHelpers.prepareReservationData(reqBody)
+    // console.log(req.body)
+    // reqBody.reservations=JSON.parse(reqBody.reservations)
+    // reqBody = requestHelpers.prepareReservationData(reqBody)
+    let reservationsRaw = JSON.parse(req.body.reservations)
+    let reservationList = []
+    reservationsRaw.forEach(reservationInstance => {
+        reservationInstance = JSON.parse(reservationInstance)
+        reservationList.push(reservationInstance)
+    })
+    // console.log('reservationList: ', reservationList)
+    // let reqBody = requestHelpers.prepareRequestBody([])
+    req.body.rezervacije = reservationList
+    delete req.body.reservations
+    
+    req.body= requestHelpers.prepareRequestBody(req)
     var returnPromise = new Promise((resolve, reject) => {
-        qiqoAPI.getQiqoReservations(reqBody).then((result) => {
+        qiqoAPI.getQiqoReservations(req).then((result) => {
             resolve(result)
         }).catch(e => reject(e))
     })
