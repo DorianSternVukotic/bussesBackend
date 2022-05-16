@@ -41,7 +41,7 @@ getLineRelationPriceList= (req) => {
     // console.log(req)
     let requestBody = requestHelpers.prepareRequestBody(req)
     // console.log('prepared-req-relation api-line')
-    // console.log(requestBody)
+    // console.log('requestBody: ',requestBody)
     var returnPromise = new Promise((resolve, reject) => {
         qiqoAPI.getQiqoLineRelationPriceList(requestBody).then((result) => {
         //     var filteredResults = filterLineRelationPriceListByRelations(result.data, requestBody.stanicaod, requestBody.stanicado)
@@ -117,10 +117,10 @@ getReservations= (req) => {
     return returnPromise
 }
 
-getBusCards = (req, customParameters) => {
+getBusCards = (ticketRequestData) => {
     var returnPromise = new Promise((resolve, reject) => {
-        let niceRequest = requestHelpers.prepareBusCardsDataRequest(req, customParameters)
-        qiqoAPI.getQiqoBusCards(niceRequest).then((result) => {
+        qiqoAPI.getQiqoBusCards(ticketRequestData).then((result) => {
+            // console.log('result: ', result)
             resolve(result)
         }).catch(e => reject(e))
     })
