@@ -1,9 +1,8 @@
 BE-TODO
-1. Otkriti sto radi povratna u zahtjevu?
-2. Pitati zasto ne dobivamo natrag nikakve podatke?
-2. Poslati zahtjev za vozne karte
-3. Dobiti natrag vozne karte
-4. Napraviti pdf voznih karti
-5. Mailat pdf vozne karte
-6. redirectat na success page
+1. Passat nazive stanica s FE kako bi mogli ispisati na kartu
+2. Ukljuciti QR kod u .pdf
+3. Formatirati .pdf i ukljuciti zeljene podatke
+4. Postaviti mailer service
+5. Mailat .pdf
+6. Redirectat na success page
 7. .env varijable izdvojiti
