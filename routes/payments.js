@@ -4,7 +4,13 @@ var api = require("../api/api");
 var requestHelpers = require("../helpers/requestHelpers")
 const {addToRequestBody} = require("../helpers/requestHelpers");
 var router = express.Router();
-const pdfService = require('../service/pdf-service')
+const pdf = require('html-pdf');
+const QRCode = require('qrcode');
+
+let html = `<b>hello world</b>`
+const options = {
+  format: 'A4'
+}
 let harcodedCustomParameters = {
     reservationsData:[
         "{\"linija\":62,\"bus\":1,\"datum\":\"2022-05-20\",\"stanicaod\":1,\"stanicado\":2}",
@@ -70,65 +76,59 @@ router.post('/transactionResponse', function(req, res) {
     transactionResponseMessage = dataBody.responseMessage
     orderNumber = dataBody.order_number
     customParametersRaw = dataBody.custom_params
+    // console.log('customParametersRaw:',customParametersRaw)
     let ticketRequestData = requestHelpers.prepareBusCardsDataRequest(customParametersRaw)
     console.log('Placanje uspjesno')
 
 
-
-
-    
-    // api.getBusCards(req).then((r) => {
-    // api.getBusCards(ticketRequestData).then((r) => {
-        // console.log('customParameters')
-        // console.log(customParameters)
-        // console.log('r.data:')
-        // console.log(r.data)
-    //     let busCards = hardcodedBusCards
-    //     let customParametersRaw = harcodedCustomParameters
-    //     let ticketData = {
-    //         busCards: busCards,
-    //         customParametersRaw: customParametersRaw
-    //     }
-    //     // let busCards = r.data  -> Ova linija ce biti korisna kasnije
-    //     // const stream = res.writeHead(200, {
-    //     //     'Content-Type': 'application/pdf',
-    //     //     'Content-Disposition':'attachment;filename=karta.pdf'
-    //     // })
-    //     // pdfService.buildPDFTicket( 
-    //     //     ticketData,
-    //     //     (chunk) => stream.write(chunk),
-    //     //     () => stream.end()
-    //     // )
-    //     // res.send(r.data)
-    // }).catch((e) => {
-    //     res.send(e)
-    // })
-    // if (transactionResponseCode == "0000" && transactionResponseMessage == "transaction approved" ) {
+    if (transactionResponseCode == "0000" && transactionResponseMessage == "transaction approved" ) {
         api.getBusCards(ticketRequestData).then((r) => {
             // console.log('customParameters')
             // console.log(customParameters)
             console.log('r.data:', r.data)
             let busCards = r.data
+            let i = 0
+            busCards.forEach((busTicket)=>{
+                i++
+                console.log('data inside ticket-',i,': ', busTicket)
+                let currentQRCode = busTicket.qrcode
+                console.log('currentQRCode: ',currentQRCode)
+                let currentImageName = 'qr'+ (orderNumber+i).toString()+'.png'
+                console.log('currentImageName: ',currentImageName)
+                //PROBLEM JE TU
+                let imagePath = path.join(__dirname, '.','tmp', currentImageName)
+                console.log('imagePath: ',imagePath)
+                QRCode.toFile(imagePath,currentQRCode, function (err, string) {
+                    if (err) throw err
+                    console.log(string)
+                  } )
+            })
             // let customParametersRaw = harcodedCustomParameters
             let ticketData = {
                 busCards: busCards,
                 customParametersRaw: customParametersRaw
             }
+            let pdfName = './ticket'+ orderNumber.toString()+'.pdf'
+            pdf.create(html, options).toFile(pdfName, (err, res) => {
+                if (err) {
+                  console.log(err);
+                }
+              });
             // let busCards = r.data  -> Ova linija ce biti korisna kasnije
-            const stream = res.writeHead(200, {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition':'attachment;filename=karta.pdf'
-            })
-            pdfService.buildPDFTicket( 
-                ticketData,
-                (chunk) => stream.write(chunk),
-                () => stream.end()
-            )
+            // const stream = res.writeHead(200, {
+            //     'Content-Type': 'application/pdf',
+            //     'Content-Disposition':'attachment;filename=karta.pdf'
+            // })
+            // pdfService.buildPDFTicket( 
+            //     ticketData,
+            //     (chunk) => stream.write(chunk),
+            //     () => stream.end()
+            // )
             // res.send(r.data)
         }).catch((e) => {
             res.send(e)
         })
-    // }
+    }
 
 });
 
