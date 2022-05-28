@@ -16,6 +16,8 @@ getQiqoActiveDepartures = (req) => {
     return returnPromise
 }
 getQiqoDepartures = (req) => {
+    // console.log('req-departures')
+    // console.log(req)
     var returnPromise = new Promise((resolve, reject) => {
         axios.post(`${qiqoBaseAPI}/PolasciGet`, req)
             .then(function (response) {
@@ -29,6 +31,8 @@ getQiqoDepartures = (req) => {
     return returnPromise
 }
 getQiqoLinePriceList = (req) => {
+    // console.log('req-line')
+    // console.log(req)
     var returnPromise = new Promise((resolve, reject) => {
         axios.post(`${qiqoBaseAPI}/LinijaCjenikGet`, req)
             .then(function (response) {
@@ -42,6 +46,8 @@ getQiqoLinePriceList = (req) => {
     return returnPromise
 }
 getQiqoLineRelationPriceList = (req) => {
+    // console.log('req-relation-line')
+    // console.log(req)
     var returnPromise = new Promise((resolve, reject) => {
         axios.post(`${qiqoBaseAPI}/LinijaCjenikRelacijaGet`, req)
             .then(function (response) {
@@ -85,7 +91,9 @@ getQiqoTimeTables = (req) => {
 
 getQiqoReservations = (req) => {
     var returnPromise = new Promise((resolve, reject) => {
-        axios.post(`${qiqoBaseAPI}/RezervacijeGet`, req)
+        // console.log('unutarsvega')
+        // console.log(req.body)
+        axios.post(`${qiqoBaseAPI}/RezervacijeGet`, req.body)
             .then(function (response) {
                 resolve(response)
             })
@@ -97,6 +105,23 @@ getQiqoReservations = (req) => {
     return returnPromise
 }
 
+getQiqoBusCards = (req) =>{
+    // console.log('req-bus-cards')
+    // console.log(req)
+    var returnPromise = new Promise((resolve, reject) => {
+        axios.post(`${qiqoBaseAPI}/VozneKarteGet`, req)
+            .then(function (response) {
+                resolve(response)
+            })
+            .catch(function (error) {
+                reject(error)
+                console.log(error);
+            });
+    })
+    return returnPromise
+}
+
+exports.getQiqoBusCards = getQiqoBusCards
 exports.getQiqoActiveDepartures = getQiqoActiveDepartures
 exports.getQiqoDepartures = getQiqoDepartures
 exports.getQiqoLinePriceList = getQiqoLinePriceList

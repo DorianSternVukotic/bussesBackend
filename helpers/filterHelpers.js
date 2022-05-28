@@ -16,5 +16,6 @@ filterLineRelationPriceListByRelations = (results, from, to) => {
   })
   return filteredResults
 }
+
 exports.filterDepartureResults = filterDepartureResults
 exports.filterLineRelationPriceListByRelations = filterLineRelationPriceListByRelations

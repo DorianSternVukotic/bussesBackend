@@ -4,6 +4,8 @@ var filterHelpers = require("../helpers/filterHelpers")
 const {addToRequestBody} = require("../helpers/requestHelpers");
 const {getLineRelationPriceListFilteredForStationsAndPrivileges} = require("../api/api");
 var router = express.Router();
+// const fs = require('fs');
+// const path = require("path");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -28,6 +30,7 @@ router.post('/activeDepartures', function(req, res, next) {
 
 router.post('/departures', function(req, res, next) {
     api.getDepartures(req).then((r) => {
+        // console.log(r.data)    
         let kosherDepartures = filterHelpers.filterDepartureResults(r.data)
         res.send(kosherDepartures)
     }).catch((e) => {
@@ -108,6 +111,8 @@ router.post('/linePriceList', function(req, res, next) {
 
 router.post('/lineRelationPriceList', function(req, res, next) {
     api.getLineRelationPriceList(req).then((r) => {
+        // console.log('r.data')
+        // console.log(r.data)
         res.send(r.data)
     }).catch((e) => {
         res.send(e)
@@ -139,8 +144,11 @@ router.post('/timeTables', function(req, res, next) {
 });
 
 router.post('/reservations', function(req, res, next) {
+    // console.log(req.body)
     api.getReservations(req).then((r) => {
-        console.log(r.data)
+        // console.log(r.data)
+        // fileData.order_number += 1
+        // fs.writeFileSync(path.resolve(__dirname, '../persistent.json'), JSON.stringify(fileData));
         res.send(r.data)
     }).catch((e) => {
         res.send(e)

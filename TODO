@@ -1,0 +1,8 @@
+BE-TODO
+1. .pdf izgenerirati iz htmla -pdfhtml service
+2. Formatirati .pdf i ukljuciti zeljene podatke
+3. Postaviti mailer service
+4. Mailat .pdf
+5. Redirectat na success page
+6. .env varijable izdvojiti
+7. maknuti harcoded
