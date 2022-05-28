@@ -121,6 +121,37 @@ getQiqoBusCards = (req) =>{
     return returnPromise
 }
 
+
+
+getQiqoBusCardReceipt = (req) =>{
+    var returnPromise = new Promise((resolve, reject) => {
+        axios.post(`${qiqoBaseAPI}/RacunVozneKarteGet`, req)
+            .then(function (response) {
+                resolve(response)
+            })
+            .catch(function (error) {
+                reject(error)
+                console.log(error);
+            });
+    })
+    return returnPromise
+}
+
+getQiqoReceiptPrintDetails = (req) =>{
+    var returnPromise = new Promise((resolve, reject) => {
+        axios.post(`${qiqoBaseAPI}/RacunPrint`, req)
+            .then(function (response) {
+                resolve(response)
+            })
+            .catch(function (error) {
+                reject(error)
+                console.log(error);
+            });
+    })
+    return returnPromise
+}
+
+
 exports.getQiqoBusCards = getQiqoBusCards
 exports.getQiqoActiveDepartures = getQiqoActiveDepartures
 exports.getQiqoDepartures = getQiqoDepartures
@@ -129,3 +160,5 @@ exports.getQiqoLineRelationPriceList = getQiqoLineRelationPriceList
 exports.getQiqoAllStationsList = getQiqoAllStationsList
 exports.getQiqoTimeTables = getQiqoTimeTables
 exports.getQiqoReservations = getQiqoReservations
+exports.getQiqoBusCardReceipt = getQiqoBusCardReceipt
+exports.getQiqoReceiptPrintDetails = getQiqoReceiptPrintDetails

@@ -6,3 +6,10 @@ BE-TODO
 5. Redirectat na success page
 6. .env varijable izdvojiti
 7. maknuti harcoded
+
+payment.js TODO:
+                    //1. kopiramo template fileove -> 
+                    //2. html se izmjenjuje i puni podacima iz ovog requesta
+                    //3. Html se prebaci u pdf pomocu puppeteera
+                    //4. pdfovi se mailaju
+                    //5. korisnika se redirecta

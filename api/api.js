@@ -127,6 +127,24 @@ getBusCards = (ticketRequestData) => {
     return returnPromise
 }
 
+getBusCardReceipt = (ticketRequestData) => {
+    var returnPromise = new Promise((resolve, reject) => {
+        qiqoAPI.getQiqoBusCardReceipt(ticketRequestData).then((result) => {
+            resolve(result)
+        }).catch(e => reject(e))
+    })
+    return returnPromise
+}
+getReceiptDetails = (ticketRequestData) => {
+    var returnPromise = new Promise((resolve, reject) => {
+        qiqoAPI.getQiqoReceiptPrintDetails(ticketRequestData).then((result) => {
+            resolve(result)
+        }).catch(e => reject(e))
+    })
+    return returnPromise
+}
+
+
 exports.getBusCards = getBusCards
 exports.getActiveDepartures = getActiveDepartures
 exports.getDepartures = getDepartures
@@ -137,3 +155,5 @@ exports.getTimeTables = getTimeTables
 exports.getReservations = getReservations
 exports.getLineRelationPriceListFilteredForStations = getLineRelationPriceListFilteredForStations
 exports.getLineRelationPriceListFilteredForStationsAndPrivileges = getLineRelationPriceListFilteredForStationsAndPrivileges
+exports.getBusCardReceipt = getBusCardReceipt
+exports.getReceiptDetails = getReceiptDetails

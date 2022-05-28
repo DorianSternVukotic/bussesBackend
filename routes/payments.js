@@ -6,6 +6,10 @@ const {addToRequestBody} = require("../helpers/requestHelpers");
 var router = express.Router();
 const pdf = require('html-pdf');
 const QRCode = require('qrcode');
+const puppeteer = require('puppeteer')
+const path = require('path')
+const nodemailer = require('nodemailer');
+const fs = require('fs')
 
 let html = `<b>hello world</b>`
 const options = {
@@ -46,26 +50,6 @@ let harcodedCustomParameters = {
         phone:"nititi"
     }
 }
-let hardcodedBusCards = [
-    {
-        "rezervacija": 18195370,
-        "idkarte": 9503453,
-        "brojkarte": "BRID-13611-16",
-        "qrcode": "78706979190;BRID-13611-16;2021-11-02;4;-1;0;-1;-1;2021-11-02;1;PULA;47;ZAGREB;2;Redovni putnici;120.56;0;16;AK Split;1;;",
-        "internetalert": true,
-        "errorcode": 0,
-        "errordescription": "OK"
-    },
-    {
-        "rezervacija": 18195371,
-        "idkarte": 9503454,
-        "brojkarte": "BRID-13612-16",
-        "qrcode": "78706979190;BRID-13612-16;2021-11-02;4;-1;1;-1;-1;2022-01-31;1;PULA;47;ZAGREB;9;Osobe+60g. pov.k.-40% 3 mj.;120;0;16;AK Split;1;;",
-        "internetalert": true,
-        "errorcode": 0,
-        "errordescription": "OK"
-    }
-]
 
 
 
@@ -79,52 +63,142 @@ router.post('/transactionResponse', function(req, res) {
     // console.log('customParametersRaw:',customParametersRaw)
     let ticketRequestData = requestHelpers.prepareBusCardsDataRequest(customParametersRaw)
     console.log('Placanje uspjesno')
+    let receipt = {}
 
 
     if (transactionResponseCode == "0000" && transactionResponseMessage == "transaction approved" ) {
+        
         api.getBusCards(ticketRequestData).then((r) => {
             // console.log('customParameters')
             // console.log(customParameters)
-            console.log('r.data:', r.data)
+            //console.log('r.data:', r.data)
             let busCards = r.data
-            let i = 0
+            let qrCounter = 0
+			let busCardIds = []
+            //TU mi dođe kod
             busCards.forEach((busTicket)=>{
-                i++
-                console.log('data inside ticket-',i,': ', busTicket)
+                qrCounter++
+                busCardIds.push(busTicket.idkarte)
+               
+                // console.log('data inside ticket-', qrCounter,': ', busTicket)
                 let currentQRCode = busTicket.qrcode
-                console.log('currentQRCode: ',currentQRCode)
-                let currentImageName = 'qr'+ (orderNumber+i).toString()+'.png'
-                console.log('currentImageName: ',currentImageName)
-                //PROBLEM JE TU
-                let imagePath = path.join(__dirname, '.','tmp', currentImageName)
-                console.log('imagePath: ',imagePath)
+                // console.log('currentQRCode: ',currentQRCode)
+                let currentImageName = 'qr'+ (orderNumber+ qrCounter).toString()+'.png'
+                // console.log('currentImageName: ',currentImageName)
+                // console.log('path.dirname:',process.cwd())
+                let imagePath = path.join(process.cwd(),'documents','resources','tickets', currentImageName)
+                // console.log('qrCounter:',qrCounter)
+                // console.log('imagePath: ',imagePath)
                 QRCode.toFile(imagePath,currentQRCode, function (err, string) {
                     if (err) throw err
                     console.log(string)
                   } )
+                
             })
             // let customParametersRaw = harcodedCustomParameters
             let ticketData = {
                 busCards: busCards,
                 customParametersRaw: customParametersRaw
             }
-            let pdfName = './ticket'+ orderNumber.toString()+'.pdf'
-            pdf.create(html, options).toFile(pdfName, (err, res) => {
-                if (err) {
-                  console.log(err);
+            //console.log('ticketRequestData:', ticketRequestData)
+			let receiptRequestData = JSON.parse(JSON.stringify(ticketRequestData))
+            delete receiptRequestData.rezervacije
+            let vozneKarteArray = []
+
+            busCardIds.forEach((ticket) => {
+                let holder = {
+                    kartaid: ticket
                 }
-              });
-            // let busCards = r.data  -> Ova linija ce biti korisna kasnije
-            // const stream = res.writeHead(200, {
-            //     'Content-Type': 'application/pdf',
-            //     'Content-Disposition':'attachment;filename=karta.pdf'
-            // })
-            // pdfService.buildPDFTicket( 
-            //     ticketData,
-            //     (chunk) => stream.write(chunk),
-            //     () => stream.end()
-            // )
-            // res.send(r.data)
+                vozneKarteArray.push(holder)
+            })
+            receiptRequestData.voznekarte = vozneKarteArray
+
+
+            // console.log('busCardIds:', busCardIds)
+            // console.log('receiptRequestData: ', receiptRequestData)
+            api.getBusCardReceipt(receiptRequestData).then((rec) =>{
+				let receiptResponse = rec.data
+                console.log('rec.data: ', rec.data)
+				let receiptId = receiptResponse.racunid
+
+                let receiptDetailsRequestData = JSON.parse(JSON.stringify(ticketRequestData))
+                delete receiptDetailsRequestData.rezervacije
+                receiptDetailsRequestData.racunid = receiptId
+                console.log('receiptDetailsRequestData: ', receiptDetailsRequestData)
+				
+				api.getReceiptDetails (receiptDetailsRequestData).then((resol) =>{
+					let receiptDetailsResponse = resol.data
+					console.log('uspjeli')
+                    console.log('resol.data: ', resol.data)
+                    receipt = receiptDetailsResponse
+
+                    let receiptQRCode = receipt.qrcode
+                    // console.log('currentQRCode: ',currentQRCode)
+                    let currentReceiptName = 'qr'+ (receiptId).toString()+'.png'
+                    // console.log('currentImageName: ',currentImageName)
+                    // console.log('path.dirname:',process.cwd())
+                    let receiptQRCodePath = path.join(process.cwd(),'documents','resources','receipts', currentReceiptName)
+                    // console.log('qrCounter:',qrCounter)
+                    // console.log('imagePath: ',imagePath)
+                    QRCode.toFile(receiptQRCodePath,receiptQRCode, function (err, string) {
+                        if (err) throw err
+                        console.log(string)
+                    } )
+					
+                    
+                    let sourceTicket = path.join(process.cwd(),'documents','templates', 'izgled-karte.html')
+                    let ticketFileName = 'karte'+ (receiptId).toString()+'html'
+                    let destinationTicket = path.join(process.cwd(),'documents','processing', ticketFileName )
+                    let sourceReceipt = path.join(process.cwd(),'documents','templates', 'izgled-racuna.html')
+                    let receiptFileName = 'racuna'+ (receiptId).toString()+'html'
+                    let destinationReceipt = path.join(process.cwd(),'documents','processing', receiptFileName )
+                    
+                    fs.copyFileSync(sourceTicket, destinationTicket, (err) => {
+                        if (err) throw err
+                    });
+                    fs.copyFileSync(sourceReceipt, destinationReceipt, (err) => {
+                        if (err) throw err
+                    });
+                    //OVDJE: 
+                    //2. html se izmjenjuje i puni podacima iz ovog requesta
+                    //KOD ZA PUNJENJE PODACIMA
+
+
+                    //3. Html se prebaci u pdf pomocu puppeteera 
+                    // https://stackblogger.com/how-to-install-and-use-puppeteer-in-ubuntu/
+
+                    // async function printPDF() {
+                    //     const browser = await puppeteer.launch({ headless: true });
+                    //     const page = await browser.newPage();
+                    //     await page.goto(destinationTicket, {waitUntil: 'networkidle0'});
+                    //     const pdf = await page.pdf({ format: 'A4' });
+                       
+                    //     await browser.close();
+                    //     return pdf
+                    //   })
+                    
+
+                    // let pdfName = './ticket'+ orderNumber.toString()+'.pdf'
+                    // pdf.create(html, options).toFile(pdfName, (err, res) => {
+                    //     if (err) {
+                    //     console.log(err);
+                    //     }
+                    // });
+
+                    //4.  KOD ZA SLANJE MAILA treba provjeriti link: https://nodemailer.com/usage/
+                    // let transporter = nodemailer.createTransport({
+                    //     service:
+                    // })
+
+
+                    //5. korisnika se redirecta - otkriti link
+                    //res.redirect('https://app.example.io');
+				}).catch((e) => {
+					res.send(e)
+				})
+			}).catch((e) => {
+				res.send(e)
+			})
         }).catch((e) => {
             res.send(e)
         })
@@ -133,6 +207,7 @@ router.post('/transactionResponse', function(req, res) {
 });
 
 router.get('/ticket', function(req, res){
+    //Streamanje filea
     const stream = res.writeHead(200, {
         'Content-Type': 'application/pdf',
         'Content-Disposition':'attachment;filename=karta.pdf'
