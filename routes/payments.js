@@ -10,47 +10,57 @@ const puppeteer = require('puppeteer')
 const path = require('path')
 const nodemailer = require('nodemailer');
 const fs = require('fs')
+const fse = require('fs-extra')
 
 let html = `<b>hello world</b>`
 const options = {
   format: 'A4'
 }
-let harcodedCustomParameters = {
-    reservationsData:[
-        "{\"linija\":62,\"bus\":1,\"datum\":\"2022-05-20\",\"stanicaod\":1,\"stanicado\":2}",
-        "{\"linija\":62,\"bus\":1,\"datum\":\"2022-05-20\",\"stanicaod\":1,\"stanicado\":2}",
-        "{\"linija\":62,\"bus\":1,\"datum\":\"2022-05-20\",\"stanicaod\":1,\"stanicado\":2}",
-        "{\"linija\":62,\"bus\":1,\"datum\":\"2022-05-20\",\"stanicaod\":1,\"stanicado\":2}",
-        "{\"linija\":39,\"bus\":1,\"datum\":\"2022-05-22\",\"stanicaod\":2,\"stanicado\":1}",
-        "{\"linija\":39,\"bus\":1,\"datum\":\"2022-05-22\",\"stanicaod\":2,\"stanicado\":1}",
-        "{\"linija\":39,\"bus\":1,\"datum\":\"2022-05-22\",\"stanicaod\":2,\"stanicado\":1}",
-        "{\"linija\":39,\"bus\":1,\"datum\":\"2022-05-22\",\"stanicaod\":2,\"stanicado\":1}"
-    ],
-    passengerNames:[
-        {"first":"a","last":"b"},{"first":"b","last":"c"},{"first":"c","last":"d"},{"first":"d","last":"e"}
-    ],
-    selectedPrivileges:[
-        {"linija":62,"stanicaod":1,"stanicado":2,"povlastica":3821,"cijena":0,"cijenapov":286,"cijenaeur":0,"cijenaeurpov":0,"povlasticatxt":"P/Povratnakarta/90dana","povlasticaentxt":"Regularpassengers","dana":90,"tipkarte":"6","errorcode":0,"errordescription":"OK"},
-        {"linija":62,"stanicaod":1,"stanicado":2,"povlastica":3823,"cijena":0,"cijenapov":159,"cijenaeur":0,"cijenaeurpov":0,"povlasticatxt":"P/djeca2-12g/50%/90dana","povlasticaentxt":"Regularpassengers","dana":90,"tipkarte":"6","errorcode":0,"errordescription":"OK"},
-        {"linija":62,"stanicaod":1,"stanicado":2,"povlastica":3821,"cijena":0,"cijenapov":286,"cijenaeur":0,"cijenaeurpov":0,"povlasticatxt":"P/Povratnakarta/90dana","povlasticaentxt":"Regularpassengers","dana":90,"tipkarte":"6","errorcode":0,"errordescription":"OK"},
-        {"linija":62,"stanicaod":1,"stanicado":2,"povlastica":3821,"cijena":0,"cijenapov":286,"cijenaeur":0,"cijenaeurpov":0,"povlasticatxt":"P/Povratnakarta/90dana","povlasticaentxt":"Regularpassengers","dana":90,"tipkarte":"6","errorcode":0,"errordescription":"OK"}
-    ],
-    reservedTickets:[
-        {"rezervacija":7355744,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355745,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355746,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355747,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355748,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355749,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355750,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"},
-        {"rezervacija":7355751,"sjedalo":1,"cijena":0,"errorcode":0,"errordescription":"OK"}
-    ],
-    buyer:{
-        email:"mailaosamtimater",
-        phone:"nititi"
-    }
+let harcodedRacunVozneKarteGetResponse = {
+    racunid: 234522,
+    errorcode: 0,
+    errordescription: 'OK'
 }
 
+/* let harcodedRacunPrintResponse = {
+    brojracuna: '10089/2003/1',
+    datum: '2021-11-03T11:21:19.91',
+    iznos: 80.0,
+    osnovica: 80.0,
+    neoporezivo: 0.0,
+    pdv: 20.0,
+    ukupno: 100.0,
+    nacinplacanja: 'Kartice',
+    napomena: 'K:BRID-47847-5',
+    zki: 'e68d136bfe5c7fa4eb33eedce585bf7d',
+    jir: '8eab0d92-f6d5-4f8e-9133-1bd2c10be6a8',
+    prodajnomjesto: 'Internet prodaja',
+    qrcode: 'https://porezna.gov.hr/rn?zki=e68d136bfe5c7fa4eb33eedce585bf7d&datv=20211103_1121&izn=100,00',
+    stavke: [
+        {
+            artikal: 'Prijevoz',
+            kolicina: 1.0,
+            cijena: 80.0,
+            osnovica: 80.0,
+            neoporezivo: 0.0,
+            pdv: 20.0,
+            ukupno: 100.0,
+            tarifa: 25.0
+        }
+    ],
+    razradaporeza: [
+        {
+            tarifa: 25.0,
+            osnovica: 80.0,
+            neoporezivo: 0.0,
+            pdv: 20.0,
+            nepodlopor: false,
+            oslobpdv: false
+        }
+    ],
+    errorcode: 0,
+    errordescription: 'OK'
+} */
 
 
 // router.get('/transactionResponse', function(req, res) {
@@ -91,7 +101,7 @@ router.post('/transactionResponse', function(req, res) {
                 // console.log('imagePath: ',imagePath)
                 QRCode.toFile(imagePath,currentQRCode, function (err, string) {
                     if (err) throw err
-                    console.log(string)
+                    //console.log(string)
                   } )
                 
             })
@@ -118,20 +128,29 @@ router.post('/transactionResponse', function(req, res) {
             // console.log('receiptRequestData: ', receiptRequestData)
             api.getBusCardReceipt(receiptRequestData).then((rec) =>{
 				let receiptResponse = rec.data
-                console.log('rec.data: ', rec.data)
+                // console.log('rec.data: ', rec.data)
+
+                //HARDCODED receipt, ovo mi ne dolazi dobro od QIQA
+                receiptResponse = harcodedRacunVozneKarteGetResponse
 				let receiptId = receiptResponse.racunid
 
                 let receiptDetailsRequestData = JSON.parse(JSON.stringify(ticketRequestData))
                 delete receiptDetailsRequestData.rezervacije
                 receiptDetailsRequestData.racunid = receiptId
-                console.log('receiptDetailsRequestData: ', receiptDetailsRequestData)
+                //hardcoded data inside
+                //console.log('receiptDetailsRequestData: ', receiptDetailsRequestData)
 				
 				api.getReceiptDetails (receiptDetailsRequestData).then((resol) =>{
 					let receiptDetailsResponse = resol.data
-					console.log('uspjeli')
-                    console.log('resol.data: ', resol.data)
+
+                   
+                    //receiptDetailsResponse = harcodedRacunPrintResponse
+					// console.log('uspjeli dobiti podatke racuna natrag')
+                    // console.log('resol.data: ', resol.data)
+                    // console.log(' receiptDetailsResponse: ',  receiptDetailsResponse)
                     receipt = receiptDetailsResponse
 
+                    //QR kod racuna generiranje
                     let receiptQRCode = receipt.qrcode
                     // console.log('currentQRCode: ',currentQRCode)
                     let currentReceiptName = 'qr'+ (receiptId).toString()+'.png'
@@ -142,23 +161,29 @@ router.post('/transactionResponse', function(req, res) {
                     // console.log('imagePath: ',imagePath)
                     QRCode.toFile(receiptQRCodePath,receiptQRCode, function (err, string) {
                         if (err) throw err
-                        console.log(string)
+                        //console.log(string)
                     } )
+                    //console.log('receipt created - qr code')
 					
-                    
+                    //COPYING AND CREATING blank template documents
                     let sourceTicket = path.join(process.cwd(),'documents','templates', 'izgled-karte.html')
-                    let ticketFileName = 'karte'+ (receiptId).toString()+'html'
-                    let destinationTicket = path.join(process.cwd(),'documents','processing', ticketFileName )
+                    let ticketFileName = 'karte'+ (receiptId).toString()+'.html'
+                    let destinationTicket = path.join(process.cwd(),'documents','processing', ticketFileName)
+                    //let destinationTicket = path.join('..','processing', ticketFileName)
                     let sourceReceipt = path.join(process.cwd(),'documents','templates', 'izgled-racuna.html')
-                    let receiptFileName = 'racuna'+ (receiptId).toString()+'html'
-                    let destinationReceipt = path.join(process.cwd(),'documents','processing', receiptFileName )
+                    let receiptFileName = 'racun'+ (receiptId).toString()+'.html'
+                    let destinationReceipt = path.join(process.cwd(),'documents','processing', receiptFileName)
+                    //let destinationReceipt = path.join('..','processing', receiptFileName)
                     
-                    fs.copyFileSync(sourceTicket, destinationTicket, (err) => {
-                        if (err) throw err
-                    });
-                    fs.copyFileSync(sourceReceipt, destinationReceipt, (err) => {
-                        if (err) throw err
-                    });
+                    // console.log('sourceTicket:', sourceTicket)
+                    // console.log('sourceReceipt:', sourceReceipt)
+                    // console.log('destinationTicket:', destinationTicket)
+                    // console.log('destinationReceipt:', destinationReceipt)
+
+                    fse.copySync(sourceTicket, destinationTicket)
+                    fse.copySync(sourceReceipt, destinationReceipt)
+                    console.log('finished creating files')
+                    
                     //OVDJE: 
                     //2. html se izmjenjuje i puni podacima iz ovog requesta
                     //KOD ZA PUNJENJE PODACIMA
