@@ -1,9 +1,9 @@
-var express = require('express');
+const express = require('express')
 const { body,validationResult } = require('express-validator');
-var api = require("../api/api");
-var requestHelpers = require("../helpers/requestHelpers")
+const api = require("../api/api");
+const requestHelpers = require("../helpers/requestHelpers")
 const {addToRequestBody} = require("../helpers/requestHelpers");
-var router = express.Router();
+const router = express.Router();
 const pdf = require('html-pdf');
 const QRCode = require('qrcode');
 const puppeteer = require('puppeteer')
@@ -11,6 +11,7 @@ const path = require('path')
 const nodemailer = require('nodemailer');
 const fs = require('fs')
 const fse = require('fs-extra')
+const cheerio = require('cheerio')
 
 let html = `<b>hello world</b>`
 const options = {
@@ -70,7 +71,7 @@ router.post('/transactionResponse', function(req, res) {
     transactionResponseMessage = dataBody.responseMessage
     orderNumber = dataBody.order_number
     customParametersRaw = dataBody.custom_params
-    // console.log('customParametersRaw:',customParametersRaw)
+    console.log('customParametersRaw:',customParametersRaw)
     let ticketRequestData = requestHelpers.prepareBusCardsDataRequest(customParametersRaw)
     console.log('Placanje uspjesno')
     let receipt = {}
@@ -165,7 +166,6 @@ router.post('/transactionResponse', function(req, res) {
                     } )
                     //console.log('receipt created - qr code')
 					
-                    //COPYING AND CREATING blank template documents
                     let sourceTicket = path.join(process.cwd(),'documents','templates', 'izgled-karte.html')
                     let ticketFileName = 'karte'+ (receiptId).toString()+'.html'
                     let destinationTicket = path.join(process.cwd(),'documents','processing', ticketFileName)
@@ -184,9 +184,17 @@ router.post('/transactionResponse', function(req, res) {
                     fse.copySync(sourceReceipt, destinationReceipt)
                     console.log('finished creating files')
                     
-                    //OVDJE: 
+
+                     //OVDJE: 
                     //2. html se izmjenjuje i puni podacima iz ovog requesta
-                    //KOD ZA PUNJENJE PODACIMA
+                    //TODO: check if ticket is read
+                    let raw_html_ticket = fs.readFileSync(destinationTicket)
+                    console.log('raw_html:', raw_html_ticket)
+                    let $ = cheerio.load(raw_html_ticket)
+                    
+                    
+                   
+                    //KOD ZA PUNJENJE PODACIMA $('.apple', '#fruits')
 
 
                     //3. Html se prebaci u pdf pomocu puppeteera 

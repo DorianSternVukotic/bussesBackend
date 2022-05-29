@@ -18,10 +18,10 @@ addToRequestBody= (req, additionalData) => {
 
 prepareBusCardsDataRequest = (customParametersRaw) => {
     let customParameters = JSON.parse(customParametersRaw)
-    let numberOfReservations = customParameters.reservationsData.length
+    let numberOfReservations = customParameters.reservationsDataRaw.length
     let numberOfPassengers = customParameters.passengerNames.length
     // console.log('numReservations: ',numberOfReservations,' ; numPassengers: ',numberOfPassengers)
-    // customParameters.reservationsRaw = JSON.parse(customParameters.reservationsData)
+    // customParameters.reservationsRaw = JSON.parse(customParameters.reservationsDataRaw)
     let buyerInfo = JSON.parse(customParameters.buyer)
     // console.log('buyerInfo: ',buyerInfo)
     // console.log('customParameters: ', customParameters)

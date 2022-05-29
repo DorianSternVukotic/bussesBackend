@@ -61,15 +61,15 @@
 
 
               <div class="row">
-                <div class="col-xl-8 col-md-12">
+                <div class="col-xl-8 col-md-12" id="datum-broj">
 					<p><strong>Datum računa:</strong> 28.4.2022 21:44:26</p>
 					<p><strong>Broj računa:</strong> 17799/155/1854</p>	
                 </div>
                 <div class="col-xl-4  col-md-12">
                   <ul class="list-unstyled">
-                    <li><span class="fw-bold">Način plaćanja:</span> Kreditna kartica</li>
-                    <li><span class="fw-bold">Oznaka operatera: </span>Internet</li>
-                    <li><span class="me-1 fw-bold">Status:</span> <span class="badge bg-success"> Plaćeno</span></li>
+                    <li id="nacin-placanja"><span class="fw-bold">Način plaćanja:</span> Kreditna kartica</li>
+                    <li id="oznaka-operatera"><span class="fw-bold">Oznaka operatera: </span>Internet</li>
+                    <li id="status"><span class="me-1 fw-bold">Status:</span> <span class="badge bg-success"> Plaćeno</span></li>
                   </ul>
                 </div>
               </div>
@@ -85,15 +85,15 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Prijevoz</td>
-                      <td class="text-right">4</td>
-                      <td class="text-right">350.00</td>
+                      <td id="ime-artikla-1">Prijevoz</td>
+                      <td class="text-right" id="kolicina-artikla-1">4</td>
+                      <td class="text-right" id="cijena-artikla-1">350.00</td>
                     </tr>
                     <tr>
                       
-                      <td>Naknada za rezervaciju</td>
-                      <td class="text-right">1</td>
-                      <td class="text-right">25</td>
+                      <td  id="ime-artikla-2">Naknada za rezervaciju</td>
+                      <td class="text-right" id="kolicina-artikla-2">1</td>
+                      <td class="text-right"id="cijena-artikla-2">25</td>
                     </tr>
                    
                   </tbody>
@@ -105,7 +105,7 @@
 			  
               <div class="row">
                 <div class="col-xl-8">
-                  <p class="ms-3 text-muted">
+                  <p class="ms-3 text-muted" id="napomena">
 					Napomena ako je ima
 				  </p>
 
@@ -115,21 +115,21 @@
 					<div class="col-12">
 						<div class="row">
 							<div class="col-7"> <span class="text-black me-4">PDV (25%)</span> </div>
-							<div class="col-5 text-right"> 70 </div>
+							<div class="col-5 text-right" id ="pdv-iznos"> 70 </div>
 						</div>
 					</div>
 					
 					<div class="col-12">
 						<div class="row">
 							<div class="col-7"> <span class="text-black me-4">Popust </span> </div>
-							<div class="col-5 text-right"> 15 </div>
+							<div class="col-5 text-right" id="popust"> 15 </div>
 						</div>
 					</div>
 					
 					<div class="col-12">
 						<div class="row">
 							<div class="col-7"> <span class="text-black me-4" style="font-size: 16px; font-weight: 800;">Ukupan iznos (kn)</span> </div>
-							<div class="col-5 text-right"> 375,00 </div>
+							<div class="col-5 text-right" id="ukupan-iznos"> 375,00 </div>
 						</div>
 					</div>
 				
@@ -142,11 +142,11 @@
 			  
 			   <div class="row">
                 <div class="col-xl-8">
-                  <p class="ms-3 text-muted">
+                  <p class="ms-3 text-muted" id="zki-jir">
 					ZKI: 3541f371-da0a-44ae-bf8b-800d63e454b8<br>
 					JIR: 3541f371-da0a-44ae-bf8b-800d63e454b8
 					<br>
-					<img src="img/qr1.png">
+					<img src="img/qr1.png" id="qr-racuna">
 				  
 				  </p>
 
